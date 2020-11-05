@@ -2,6 +2,7 @@ package server
 
 import (
 	"github.com/go-martini/martini"
+	"handlers"
 	"logger"
 )
 
@@ -24,8 +25,8 @@ func server() *martini.ClassicMartini {
 	router.Get("/healthcheck", Healthcheck) // a "response checker"
 
 	// API
-	router.Group("/kafka-rest-proxy/topics", func(r martini.Router) {
-
+	router.Group("/kafka-rest-proxy", func(r martini.Router) {
+		router.Post("/topics", handlers.SendData)
 	})
 	return router
 }
