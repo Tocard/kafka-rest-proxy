@@ -26,8 +26,7 @@ func server() *martini.ClassicMartini {
 
 	// API
 	router.Group("/kafka-rest-proxy", func(r martini.Router) {
-		router.Post("/topics", handlers.SendData)
-		router.Get("/healthcheck", Healthcheck)
+		router.Post("/topics/:topic", handlers.SendToKafka)
 	})
 	return router
 }
