@@ -24,5 +24,6 @@ func main() {
 		log.Fatal("Error during parsing config.yml", err.Error())
 	}
 	log.Info(config)
+	data.SetConfig(config)
 	server.GetServer().Run()
 }

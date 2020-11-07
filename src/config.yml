@@ -1,8 +1,7 @@
-
-format: "json"           
+format: "json"
 log_level: "debug"       
 log_path: "/directory/path/to/store/logs"
 
-kafka: ["127.0.0.1:9092"]
-max_retries: 10
-producer_registration_namespace: "/kafka-rest-proxy" 
+kafka_broker: ["127.0.0.1:9092"]
+
+hostname: "localhost"

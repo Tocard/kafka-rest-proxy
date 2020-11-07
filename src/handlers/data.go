@@ -3,7 +3,6 @@ package handlers
 import (
 	"data"
 	"encoding/json"
-	"fmt"
 	"github.com/go-martini/martini"
 	log "github.com/sirupsen/logrus"
 	"io/ioutil"
@@ -20,7 +19,7 @@ func SendData(r *http.Request) (int, string) {
 	json.Unmarshal(d, &result)
 	m := result.(map[string]interface{})
 
-	for k, v := range m {
+	for _, v := range m {
 		switch vv := v.(type) {
 		case []interface{}:
 			for _, u := range vv {
@@ -39,12 +38,8 @@ func SendData(r *http.Request) (int, string) {
 							o = meta
 						}
 					}
-				default:
-					fmt.Printf("Type handler not implemented: %#v\n", zz)
 				}
 			}
-		default:
-			return http.StatusInternalServerError, k + "is of a type I don't know how to handle"
 		}
 	}
 	json.Marshal(m)
@@ -53,23 +48,22 @@ func SendData(r *http.Request) (int, string) {
 
 func SendToKafka(params martini.Params, r *http.Request) (int, string) {
 	defer r.Body.Close()
-	broker := []string{"127.0.0.1:9092"}
+	broker := data.YamlConfig.KafkaBroker
 	producer := data.NewProducer(broker)
 	body, err := ioutil.ReadAll(r.Body)
 	if err != nil {
 		log.WithField("error", err.Error()).Error("failed to read body")
 	}
 	topic := params["topic"]
-	topic = strings.ReplaceAll(topic, ":", "")
+	topic = strings.ReplaceAll(topic, ":", "") // need to understand why
 	log.Info(topic)
 	_, _, err = producer.SendMessage(&sarama.ProducerMessage{
 		Topic: topic,
 		Value: sarama.StringEncoder(body),
 	})
-
 	if err != nil {
 		log.WithField("error", err.Error()).Error("failed to stored")
 	}
 
-	return http.StatusAccepted, string("OK")
+	return http.StatusAccepted, string("message delivered\n")
 }

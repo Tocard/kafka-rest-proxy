@@ -1,8 +1,9 @@
 package data
 
 type Config struct {
-	Log           Log
-	KafkaProducer KafkaProducer `yaml:"kafka-producer"`
+	Log         Log
+	KafkaBroker []string `yaml:"kafka_broker"`
+	HostName    string   `yaml:"hostname"`
 }
 
 type Log struct {
@@ -11,12 +12,13 @@ type Log struct {
 	LogPath  string `yaml:"log_path"`
 }
 
-type KafkaProducer struct {
-	KafkaBroker []string `yaml:"kafka_broker"`
-	MaxRetries  int      `yaml:"max_retries"`
-}
+var YamlConfig *Config = nil
 
 func NewConfig() *Config {
 	cnf := &Config{}
 	return cnf
+}
+
+func SetConfig(cfg *Config) {
+	YamlConfig = cfg
 }
