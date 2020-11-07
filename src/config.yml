@@ -1,0 +1,9 @@
+
+format: "json"           
+log_level: "debug"       
+log_path: "/directory/path/to/store/logs"
+
+zookeeper: "127.0.0.1:2181/kafka"
+zookeeper_timeout: 5             
+max_retries: 10                  
+producer_registration_namespace: "/kafka-rest-proxy" 
